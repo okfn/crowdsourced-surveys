@@ -30,6 +30,7 @@ def send_form(form):
 
         if not form:
             click.echo(click.style('failed!', fg='red'))
+            raise click.Abort()
         else:
             click.echo('done (id %s).' % form['id'])
 
@@ -38,6 +39,7 @@ def send_form(form):
         stage = api.create_stage(form['id'], data=stage_payload, verbose=False)
         if not stage:
             click.echo(click.style('failed!', fg='red'))
+            raise click.Abort()
         else:
             click.echo('done (id %s).' % stage['id'])
 
