@@ -1,4 +1,5 @@
 import os
+import subprocess
 import click
 import requests
 from utils.api import ApiWrapper
@@ -80,38 +81,59 @@ def send_answer(form, answer):
 
 
 @click.command()
-@click.option('-a', help='Test authentication', is_flag=True)
-@click.option('-p', help='Ping test', is_flag=True)
-@click.option('-t', help='Time to API and back', is_flag=True)
-@click.option('-e', help='Print env vars (paged)', is_flag=True)
-def test(a, p, t, e):
-    if not any((a, p, t, e)):
+@click.option('--auth', '-a', help='Test authentication', is_flag=True)
+@click.option('--ping', '-p', help='Ping test', is_flag=True)
+@click.option('--time', '-t', help='Time to API and back', is_flag=True)
+@click.option('--env', '-e', help='Print env vars (paged)', is_flag=True)
+def test(auth, ping, time, env):
+    if not any((auth, ping, time, env)):
         click.echo('No test specified, defaulting to ping test')
-        p = True
+        ping = True
 
-    if a:
+    if auth:
         if api.get_token():
             click.echo(click.style('Token OK', fg='green'))
         else:
             click.echo(click.style('Cannot get token', fg='red'))
-    if p:
+    if ping:
         test = api.test()
         if test.status_code == requests.codes.ok:
             click.echo(click.style('API is online', fg='green'))
         else:
             click.echo(click.style('API is offline', fg='red'))
-    if t:
+    if time:
         test = api.test()
         click.echo('Time elapsed: %s' % test.elapsed)
-    if e:
+    if env:
         click.echo_via_pager('\n'.join('%s=%s' % (key, value)
                                        for key, value in os.environ.items()))
 
+@click.command()
+@click.option('--app', '-a', help='Heroku app name')
+@click.option('--limit', '-l', help='Max photo upload size', type=int)
+def heroku_adjust_upload(app, limit):
+    subprocess.run([
+        "heroku",
+        "run",
+        "-a",
+        app,
+        "sed",
+        "-i",
+        "s/1048576/10485760/",
+        "/app/application/config/media.php"
+    ])
+    subprocess.run([
+        "heroku",
+        "restart",
+        "-a",
+        app
+    ])
 
 cli.add_command(send_form)
 cli.add_command(send_answer)
 cli.add_command(delete_form)
 cli.add_command(test)
+cli.add_command(heroku_adjust_upload)
 
 
 if __name__ == '__main__':
