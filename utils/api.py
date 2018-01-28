@@ -169,7 +169,27 @@ class ApiWrapper:
                                 method='DELETE')
         return res
 
-    def submit_response(self, survey_id, response):
+    @authenticated
+    def get_form_attributes(self, form_id, keys=False):
+        form_attributes = self.make_request('{}/forms/{}/attributes'.format(self.api_url, form_id))
+        # ipdb.set_trace()
+        attributes = form_attributes.json()['results']
+
+        if keys is False:
+            return attributes
+        else:
+            return {v['label']: v['key'] for v in attributes}
+
+    @authenticated
+    @validated
+    def submit_post(self, data, verbose=False):
         """ Send a response for an existing survey
         """
-        return
+        data=json.dumps(data)
+        print(data)
+        res = self.make_request('{}/posts/'.format(self.api_url),
+                                data=data,
+                                method='POST')
+        if verbose:
+            print(res.text)
+        return res

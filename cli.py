@@ -3,6 +3,7 @@ import subprocess
 import click
 import requests
 from utils.api import ApiWrapper
+from utils.faker import FakeTanzaniaData
 from fixtures import forms
 
 api = ApiWrapper()
@@ -72,12 +73,35 @@ def delete_form(id):
 
 
 @click.command()
-@click.option('--form', help='Form ID to submit for')
-@click.option('--answer', help='Answer payload')
+@click.option('--form', '-f', help='Form ID to submit for')
+@click.option('--amount', '-n', type=int, help='How many (fake) answers to submit')
+def fake_answer(form, amount):
+    click.echo('Faking %i answers for form %s' % (amount, form))
+    # print('Answer is %s' % answer)
+    attributes = api.get_form_attributes(form, keys=True)
+    for i in range(amount):
+        fake_data = FakeTanzaniaData()
+        # print(fake_data)
+        fake_payload = fake_data.payload(form_id=form)
+        # print(fake_payload)
+        res = api.submit_post(fake_payload, verbose=True)
+    # if not res:
+    #     click.echo(click.style('failed!', fg='red'))
+    # else:
+    #     click.echo('done.')
+
+@click.command()
+@click.option('--form', '-f', help='Form ID to submit for')
+@click.option('--answer', '-a', help='Answer payload')
 def send_answer(form, answer):
     click.echo('Submitting answer to form %s' % form)
     click.echo('Answer payload is %s' % answer)
     # print('Answer is %s' % answer)
+    res = api.submit_post(form, answer)
+    if not res:
+        click.echo(click.style('failed!', fg='red'))
+    else:
+        click.echo('done.')
 
 
 @click.command()
@@ -131,6 +155,7 @@ def heroku_adjust_upload(app, limit):
 
 cli.add_command(send_form)
 cli.add_command(send_answer)
+cli.add_command(fake_answer)
 cli.add_command(delete_form)
 cli.add_command(test)
 cli.add_command(heroku_adjust_upload)
