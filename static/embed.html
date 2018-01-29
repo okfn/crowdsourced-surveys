@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <title>Schools in Tanzania</title>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">
+    </script>
+  </head>
+  <body>
+    <style>
+     iframe {
+       width: 100%;
+     }
+     header {
+       width: 100%;
+       height: 10%;
+     }
+     footer {
+       width: 100%;
+       height: 10%;
+     }
+    </style>
+    <header>
+      Header
+    </header>
+    <iframe
+      id="ifrm"
+      src="http://localhost:8080/posts/create/681"
+      allowfullscreen
+      frameborder="0"
+      allow="geolocation"
+      ></iframe>
+    <footer>
+      Footer
+    </footer>
+
+    <script>
+      function init_content_monitor() {
+        var content = jQuery('#ifrm');
+
+        // The user did navigate away from the currently displayed iframe page. Show an animation
+        var content_start_loading = function() {
+          alert ('NOW: show the animation');
+        }
+
+        // the iframe is done loading a new page. Hide the animation again
+        var content_finished_loading = function() {
+          alert ('DONE: hide the animation');
+        }
+
+        // Listen to messages sent from the content iframe
+        var receiveMessage = function receiveMessage(e){
+          // Handle the message
+          switch (e.data) {
+            case 'iframe_change': content_start_loading(); break;
+          }
+        };
+        window.addEventListener("message", receiveMessage, false);
+
+        // This will be triggered when the iframe is completely loaded
+        content.on('load', content_finished_loading);
+      }
+    </script>
+    <script>
+     iFrameResize({
+       log:true,
+       checkOrigin: false
+     });
+    </script>
+  </body>
+</html>
