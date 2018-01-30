@@ -15,7 +15,7 @@ function init_content_monitor() {
   var receiveMessage = function receiveMessage(e){
     // Handle the message
     switch (e.data) {
-    case 'iframe_change': content_start_loading(); break;
+    case 'location': content_start_loading(); break;
     }
   };
   window.addEventListener("message", receiveMessage, false);
