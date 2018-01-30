@@ -25,7 +25,13 @@ function init_content_monitor() {
 }
 
 $(window).on("message", function(e) {
-  console.log("message", e)
+  if (e.originalEvent.data.location) {
+    path = e.originalEvent.data.location.split('/').pop();
+    if (path === 'map') {
+      $('#ifrm').hide();
+      document.writeln('Thank you!');
+    }
+  }
 });
 
 iFrameResize({
