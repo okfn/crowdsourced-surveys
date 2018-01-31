@@ -1,28 +1,27 @@
-function init_content_monitor() {
-  var content = jQuery('#ifrm');
+var surveyId = 691;
+var hostname = window.location.hostname;
+var subdomain = hostname.split('.')[0];
+var envSuffix = undefined;
 
-  // The user did navigate away from the currently displayed iframe page. Show an animation
-  var content_start_loading = function() {
-    alert ('NOW: show the animation');
-  }
+var envs = {
+  'default': '-staging',
+  'tz-schools-staging': '-staging',
+  'tz-schools': ''
+};
 
-  // the iframe is done loading a new page. Hide the animation again
-  var content_finished_loading = function() {
-    alert ('DONE: hide the animation');
-  }
-
-  // Listen to messages sent from the content iframe
-  var receiveMessage = function receiveMessage(e){
-    // Handle the message
-    switch (e.data) {
-    case 'location': content_start_loading(); break;
-    }
-  };
-  window.addEventListener("message", receiveMessage, false);
-
-  // This will be triggered when the iframe is completely loaded
-  content.on('load', content_finished_loading);
+if(!hostname) {
+  subdomain = 'default';
 }
+
+envSuffix = envs[subdomain];
+
+$(document).ready(function() {
+  $('#ifrm').attr(
+    'src',
+    'https://crowdsurvey' + envSuffix + '.herokuapp.com/posts/create/' + surveyId
+  );
+});
+
 
 $(window).on("message", function(e) {
   if (e.originalEvent.data.location) {
