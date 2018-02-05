@@ -28,7 +28,7 @@ $(window).on("message", function(e) {
     path = e.originalEvent.data.location.split('/').pop();
     if (path === 'map') {
       $('#ifrm').hide();
-      document.writeln('Thank you!');
+      $('section.thankyou').show();
     }
   }
 });

@@ -8,24 +8,23 @@
     <script
       src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.min.js">
     </script>
-  </head>
-  <body>
     <style>
-     body {
-       background-color: #F1F1F4;
-     }
-     iframe {
-       width: 100%;
-     }
-     header {
-       width: 100%;
-       height: 10%;
-     }
-     footer {
-       width: 100%;
-       height: 10%;
+     body {background-color: #F1F1F4;}
+     iframe {width: 100%;}
+     header {width: 100%; height: 10%;}
+     footer {width: 100%; height: 10%;}
+     section.thankyou { display: none; width: 100%; height: 100%; overflow: hidden; background-color: #61BC30; }
+     section.thankyou p {
+       width: 100%; height: 1em;
+       display: block; text-align: center; margin-top: 20%;
+       color: white; font-size: 3em; font-weight: 800; font-family: 'sans';
      }
     </style>
+  </head>
+  <body>
+    <section class="thankyou">
+      <p>Thank you!</p>
+    </section>
     <iframe
       id="ifrm"
       allowfullscreen
