@@ -9,7 +9,8 @@ var envs = {
   'tz-schools': ''
 };
 
-if(!hostname) {
+
+if(!hostname || parseInt(subdomain)) {
   subdomain = 'default';
 }
 
@@ -33,7 +34,7 @@ $(window).on("message", function(e) {
   }
 });
 
-iFrameResize({
-  log:false,
-  checkOrigin: false
-});
+// iFrameResize({
+//   log:false,
+//   checkOrigin: false
+// });
