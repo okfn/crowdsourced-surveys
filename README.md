@@ -60,4 +60,4 @@ Options:
 
 MIT License
 
-Copyright (c) 2018 Open Knowledge International
+Copyright (c) 2018 Open Knowledge Foundation
